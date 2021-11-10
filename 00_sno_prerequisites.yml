@@ -30,5 +30,5 @@
         
         - name: Check for pullSecret variable and fail fast
           fail:
-            msg: "Check the pullSecret var in files/vars.yaml"
+            msg: "Check the pullSecret var in vars/sno_vars.yaml"
           when: (cluster.pullSecret is undefined) or (cluster.pullSecret | length < 1)
