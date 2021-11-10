@@ -22,4 +22,3 @@
     - name: Jedy
       debug:
         msg: May OCP be with you
- 
