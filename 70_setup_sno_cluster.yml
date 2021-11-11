@@ -82,16 +82,6 @@
         src: templates/libvirt_dnsmasq_sno.j2
         dest: "/etc/NetworkManager/dnsmasq.d/{{ cluster.name }}-libvirt_dnsmasq.conf"
       become: true
-      when:
-        - ansible_distribution != 'RedHat'
-
-    - name: Configure NetworkManager for libvirt network
-      template:
-        src: templates/libvirt_dnsmasq_sno.j2
-        dest: "/etc/dnsmasq.d/{{ cluster.name }}-libvirt_dnsmasq.conf"
-      become: true
-      when:
-        - ansible_distribution == 'RedHat'
 
     - name: Take care of systemd-resolved on F33 and Ubuntu hosts
       block:
@@ -166,13 +156,18 @@
         dest: "{{ libvirt.pool.pool_dir }}/{{ cluster.name }}/coreos.iso"
       become: true
 
+    - name: Stop dnsmasq
+      service:
+        name: dnsmasq
+        state: stopped
+        enabled: no
+
     - name: Restart net-services
       service:
         name: "{{ item }}"
         state: restarted
       loop:
         - NetworkManager
-        - dnsmasq
         - libvirtd
       become: true
 
